@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="tr" class="dark"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MONTRY SHOWROOM</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Three.js (Gerçekçi 3D Yelek Turntable Motoru) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Google Fonts: Bebas Neue & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <!-- Font Awesome İkonlar -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Bebas Neue"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #060608;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Showroom arka plan ince mimari ızgara */
+        .showroom-grid {
+            background-size: 64px 64px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+        }
+
+        .glass-panel {
+            background: rgba(15, 15, 20, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Dönen 3D Pedestal Halkası */
+        @keyframes spinSlow {
+            from { transform: rotateX(75deg) rotateZ(0deg); }
+            to { transform: rotateX(75deg) rotateZ(360deg); }
+        }
+
+        .pedestal-ring {
+            animation: spinSlow 14s linear infinite;
+        }
+
+        /* Kulüpler Arası Sinematik Geçiş Animasyonu */
+        .stage-transition {
+            transition: opacity 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.34s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.34s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform, filter;
+        }
+
+        .stage-transition.is-switching-left {
+            opacity: 0;
+            transform: scale(0.92) translateY(10px);
+            filter: blur(8px);
+        }
+
+        .stage-transition.is-switching-right {
+            opacity: 0;
+            transform: translateY(16px);
+            filter: blur(6px);
+        }
+
+        /* Özel Kaydırma Çubuğu */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060608;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 9999px;
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:"Plus Jakarta Sans", sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.bottom-0{bottom:0px}.bottom-3{bottom:0.75rem}.bottom-6{bottom:1.5rem}.left-1\/2{left:50%}.left-1\/4{left:25%}.right-0{right:0px}.top-0{top:0px}.top-1\/2{top:50%}.z-10{z-index:10}.z-20{z-index:20}.z-30{z-index:30}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.my-2{margin-top:0.5rem;margin-bottom:0.5rem}.mb-1{margin-bottom:0.25rem}.mb-2\.5{margin-bottom:0.625rem}.mb-3{margin-bottom:0.75rem}.mr-1{margin-right:0.25rem}.mr-1\.5{margin-right:0.375rem}.mt-0\.5{margin-top:0.125rem}.mt-1\.5{margin-top:0.375rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.aspect-\[4\/4\.6\]{aspect-ratio:4/4.6}.h-16{height:4rem}.h-2{height:0.5rem}.h-52{height:13rem}.h-56{height:14rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-\[520px\]{height:520px}.h-full{height:100%}.h-2\.5{height:0.625rem}.h-3{height:0.75rem}.max-h-\[88\%\]{max-height:88%}.min-h-screen{min-height:100vh}.w-12{width:3rem}.w-2{width:0.5rem}.w-52{width:13rem}.w-56{width:14rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-\[520px\]{width:520px}.w-full{width:100%}.w-2\.5{width:0.625rem}.w-3{width:0.75rem}.max-w-2xl{max-width:42rem}.max-w-7xl{max-width:80rem}.max-w-\[380px\]{max-width:380px}.max-w-\[88\%\]{max-width:88%}.max-w-lg{max-width:32rem}.flex-grow{flex-grow:1}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-x-full{--tw-translate-x:100%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-y-4{--tw-translate-y:1rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-grab{cursor:grab}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;user-select:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-8{gap:2rem}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-2\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.625rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.625rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded-2xl{border-radius:1rem}.rounded-\[2rem\]{border-radius:2rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-md{border-radius:0.375rem}.rounded{border-radius:0.25rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-red-600\/40{border-color:rgb(220 38 38 / 0.4)}.border-white\/10{border-color:rgb(255 255 255 / 0.1)}.border-white\/15{border-color:rgb(255 255 255 / 0.15)}.border-white\/\[0\.06\]{border-color:rgb(255 255 255 / 0.06)}.border-white\/25{border-color:rgb(255 255 255 / 0.25)}.bg-\[\#060608\]\/80{background-color:rgb(6 6 8 / 0.8)}.bg-\[\#08080b\]\/90{background-color:rgb(8 8 11 / 0.9)}.bg-\[\#0d0d11\]{--tw-bg-opacity:1;background-color:rgb(13 13 17 / var(--tw-bg-opacity, 1))}.bg-black\/10{background-color:rgb(0 0 0 / 0.1)}.bg-black\/70{background-color:rgb(0 0 0 / 0.7)}.bg-black\/75{background-color:rgb(0 0 0 / 0.75)}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.bg-red-600\/15{background-color:rgb(220 38 38 / 0.15)}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/10{background-color:rgb(255 255 255 / 0.1)}.bg-white\/5{background-color:rgb(255 255 255 / 0.05)}.bg-white\/\[0\.03\]{background-color:rgb(255 255 255 / 0.03)}.bg-zinc-900{--tw-bg-opacity:1;background-color:rgb(24 24 27 / var(--tw-bg-opacity, 1))}.bg-black\/60{background-color:rgb(0 0 0 / 0.6)}.bg-white\/\[0\.02\]{background-color:rgb(255 255 255 / 0.02)}.bg-white\/\[0\.08\]{background-color:rgb(255 255 255 / 0.08)}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-zinc-200{--tw-gradient-from:#e4e4e7 var(--tw-gradient-from-position);--tw-gradient-to:rgb(228 228 231 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-zinc-800{--tw-gradient-from:#27272a var(--tw-gradient-from-position);--tw-gradient-to:rgb(39 39 42 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-zinc-400{--tw-gradient-to:rgb(161 161 170 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #a1a1aa var(--tw-gradient-via-position), var(--tw-gradient-to)}.to-zinc-600{--tw-gradient-to:#52525b var(--tw-gradient-to-position)}.to-zinc-950{--tw-gradient-to:#09090b var(--tw-gradient-to-position)}.bg-clip-text{-webkit-background-clip:text;background-clip:text}.object-contain{object-fit:contain}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-3\.5{padding:0.875rem}.p-2\.5{padding:0.625rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-7{padding-left:1.75rem;padding-right:1.75rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pt-3{padding-top:0.75rem}.pt-4{padding-top:1rem}.text-left{text-align:left}.font-display{font-family:"Bebas Neue", sans-serif}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-5xl{font-size:3rem;line-height:1}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-base{font-size:1rem;line-height:1.5rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-\[0\.92\]{line-height:0.92}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.tracking-\[0\.2em\]{letter-spacing:0.2em}.tracking-tight{letter-spacing:-0.025em}.tracking-wide{letter-spacing:0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-black{--tw-text-opacity:1;color:rgb(0 0 0 / var(--tw-text-opacity, 1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.text-transparent{color:transparent}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-zinc-300{--tw-text-opacity:1;color:rgb(212 212 216 / var(--tw-text-opacity, 1))}.text-zinc-400{--tw-text-opacity:1;color:rgb(161 161 170 / var(--tw-text-opacity, 1))}.text-zinc-500{--tw-text-opacity:1;color:rgb(113 113 122 / var(--tw-text-opacity, 1))}.opacity-0{opacity:0}.opacity-25{opacity:0.25}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_0_30px_rgba\(255\2c 255\2c 255\2c 0\.15\)\]{--tw-shadow:0 0 30px rgba(255,255,255,0.15);--tw-shadow-colored:0 0 30px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_0_40px_rgba\(220\2c 38\2c 38\2c 0\.25\)\]{--tw-shadow:0 0 40px rgba(220,38,38,0.25);--tw-shadow-colored:0 0 40px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-black\/90{--tw-shadow-color:rgb(0 0 0 / 0.9);--tw-shadow:var(--tw-shadow-colored)}.shadow-red-600\/25{--tw-shadow-color:rgb(220 38 38 / 0.25);--tw-shadow:var(--tw-shadow-colored)}.blur-\[140px\]{--tw-blur:blur(140px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow-\[0_24px_32px_rgba\(0\2c 0\2c 0\2c 0\.95\)\]{--tw-drop-shadow:drop-shadow(0 24px 32px rgba(0,0,0,0.95));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-xl{--tw-backdrop-blur:blur(24px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.duration-700{transition-duration:700ms}.ease-out{transition-timing-function:cubic-bezier(0, 0, 0.2, 1)}.selection\:bg-red-600 *::selection{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.selection\:text-white *::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.selection\:bg-red-600::selection{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.selection\:text-white::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:border-white\/25:hover{border-color:rgb(255 255 255 / 0.25)}.hover\:bg-red-500:hover{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.hover\:bg-white\/15:hover{background-color:rgb(255 255 255 / 0.15)}.hover\:bg-zinc-200:hover{--tw-bg-opacity:1;background-color:rgb(228 228 231 / var(--tw-bg-opacity, 1))}.hover\:bg-white\/\[0\.05\]:hover{background-color:rgb(255 255 255 / 0.05)}.hover\:text-red-300:hover{--tw-text-opacity:1;color:rgb(252 165 165 / var(--tw-text-opacity, 1))}.hover\:text-red-400:hover{--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.focus\:border-red-500:focus{--tw-border-opacity:1;border-color:rgb(239 68 68 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.active\:cursor-grabbing:active{cursor:grabbing}.group:hover .group-hover\:translate-x-1{--tw-translate-x:0.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:bg-white\/20{background-color:rgb(255 255 255 / 0.2)}@media (min-width: 640px){.sm\:flex{display:flex}.sm\:h-10{height:2.5rem}.sm\:h-20{height:5rem}.sm\:w-10{width:2.5rem}.sm\:max-w-\[420px\]{max-width:420px}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:py-12{padding-top:3rem;padding-bottom:3rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\:text-5xl{font-size:3rem;line-height:1}.sm\:text-7xl{font-size:4.5rem;line-height:1}.sm\:text-\[11px\]{font-size:11px}.sm\:text-base{font-size:1rem;line-height:1.5rem}.sm\:text-lg{font-size:1.125rem;line-height:1.75rem}.sm\:text-sm{font-size:0.875rem;line-height:1.25rem}}@media (min-width: 1024px){.lg\:col-span-5{grid-column:span 5 / span 5}.lg\:col-span-7{grid-column:span 7 / span 7}.lg\:grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:gap-14{gap:3.5rem}.lg\:px-10{padding-left:2.5rem;padding-right:2.5rem}.lg\:text-\[5\.2rem\]{font-size:5.2rem}}</style><style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:"Plus Jakarta Sans", sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.bottom-0{bottom:0px}.bottom-3{bottom:0.75rem}.bottom-6{bottom:1.5rem}.left-1\/2{left:50%}.left-1\/4{left:25%}.right-0{right:0px}.top-0{top:0px}.top-1\/2{top:50%}.z-10{z-index:10}.z-20{z-index:20}.z-30{z-index:30}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.my-2{margin-top:0.5rem;margin-bottom:0.5rem}.mb-1{margin-bottom:0.25rem}.mb-2\.5{margin-bottom:0.625rem}.mb-3{margin-bottom:0.75rem}.mr-1{margin-right:0.25rem}.mr-1\.5{margin-right:0.375rem}.mt-0\.5{margin-top:0.125rem}.mt-1\.5{margin-top:0.375rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.aspect-\[4\/4\.6\]{aspect-ratio:4/4.6}.h-16{height:4rem}.h-2{height:0.5rem}.h-2\.5{height:0.625rem}.h-3{height:0.75rem}.h-52{height:13rem}.h-56{height:14rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-\[520px\]{height:520px}.h-full{height:100%}.max-h-\[88\%\]{max-height:88%}.min-h-screen{min-height:100vh}.w-12{width:3rem}.w-2{width:0.5rem}.w-2\.5{width:0.625rem}.w-3{width:0.75rem}.w-52{width:13rem}.w-56{width:14rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-\[520px\]{width:520px}.w-full{width:100%}.max-w-2xl{max-width:42rem}.max-w-7xl{max-width:80rem}.max-w-\[380px\]{max-width:380px}.max-w-\[88\%\]{max-width:88%}.max-w-lg{max-width:32rem}.flex-grow{flex-grow:1}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.translate-x-full{--tw-translate-x:100%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite}.cursor-grab{cursor:grab}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;user-select:none}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-8{gap:2rem}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-2\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.625rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.625rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-\[2rem\]{border-radius:2rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l{border-left-width:1px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-red-600\/40{border-color:rgb(220 38 38 / 0.4)}.border-white\/10{border-color:rgb(255 255 255 / 0.1)}.border-white\/15{border-color:rgb(255 255 255 / 0.15)}.border-white\/25{border-color:rgb(255 255 255 / 0.25)}.border-white\/\[0\.06\]{border-color:rgb(255 255 255 / 0.06)}.bg-\[\#060608\]\/80{background-color:rgb(6 6 8 / 0.8)}.bg-\[\#08080b\]\/90{background-color:rgb(8 8 11 / 0.9)}.bg-\[\#0d0d11\]{--tw-bg-opacity:1;background-color:rgb(13 13 17 / var(--tw-bg-opacity, 1))}.bg-black\/10{background-color:rgb(0 0 0 / 0.1)}.bg-black\/60{background-color:rgb(0 0 0 / 0.6)}.bg-black\/70{background-color:rgb(0 0 0 / 0.7)}.bg-black\/75{background-color:rgb(0 0 0 / 0.75)}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.bg-red-600\/15{background-color:rgb(220 38 38 / 0.15)}.bg-transparent{background-color:transparent}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/10{background-color:rgb(255 255 255 / 0.1)}.bg-white\/5{background-color:rgb(255 255 255 / 0.05)}.bg-white\/\[0\.02\]{background-color:rgb(255 255 255 / 0.02)}.bg-white\/\[0\.03\]{background-color:rgb(255 255 255 / 0.03)}.bg-white\/\[0\.08\]{background-color:rgb(255 255 255 / 0.08)}.bg-zinc-900{--tw-bg-opacity:1;background-color:rgb(24 24 27 / var(--tw-bg-opacity, 1))}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.from-zinc-200{--tw-gradient-from:#e4e4e7 var(--tw-gradient-from-position);--tw-gradient-to:rgb(228 228 231 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-zinc-800{--tw-gradient-from:#27272a var(--tw-gradient-from-position);--tw-gradient-to:rgb(39 39 42 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-zinc-400{--tw-gradient-to:rgb(161 161 170 / 0)  var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #a1a1aa var(--tw-gradient-via-position), var(--tw-gradient-to)}.to-zinc-600{--tw-gradient-to:#52525b var(--tw-gradient-to-position)}.to-zinc-950{--tw-gradient-to:#09090b var(--tw-gradient-to-position)}.bg-clip-text{-webkit-background-clip:text;background-clip:text}.object-contain{object-fit:contain}.p-2\.5{padding:0.625rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-7{padding-left:1.75rem;padding-right:1.75rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pt-3{padding-top:0.75rem}.pt-4{padding-top:1rem}.text-left{text-align:left}.font-display{font-family:"Bebas Neue", sans-serif}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-5xl{font-size:3rem;line-height:1}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-\[0\.92\]{line-height:0.92}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.tracking-\[0\.2em\]{letter-spacing:0.2em}.tracking-tight{letter-spacing:-0.025em}.tracking-wide{letter-spacing:0.025em}.tracking-wider{letter-spacing:0.05em}.tracking-widest{letter-spacing:0.1em}.text-black{--tw-text-opacity:1;color:rgb(0 0 0 / var(--tw-text-opacity, 1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153 / var(--tw-text-opacity, 1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.text-transparent{color:transparent}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-zinc-300{--tw-text-opacity:1;color:rgb(212 212 216 / var(--tw-text-opacity, 1))}.text-zinc-400{--tw-text-opacity:1;color:rgb(161 161 170 / var(--tw-text-opacity, 1))}.text-zinc-500{--tw-text-opacity:1;color:rgb(113 113 122 / var(--tw-text-opacity, 1))}.opacity-25{opacity:0.25}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_0_30px_rgba\(255\2c 255\2c 255\2c 0\.15\)\]{--tw-shadow:0 0 30px rgba(255,255,255,0.15);--tw-shadow-colored:0 0 30px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-\[0_0_40px_rgba\(220\2c 38\2c 38\2c 0\.25\)\]{--tw-shadow:0 0 40px rgba(220,38,38,0.25);--tw-shadow-colored:0 0 40px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-black\/90{--tw-shadow-color:rgb(0 0 0 / 0.9);--tw-shadow:var(--tw-shadow-colored)}.shadow-red-600\/25{--tw-shadow-color:rgb(220 38 38 / 0.25);--tw-shadow:var(--tw-shadow-colored)}.blur-\[140px\]{--tw-blur:blur(140px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.drop-shadow-\[0_24px_32px_rgba\(0\2c 0\2c 0\2c 0\.95\)\]{--tw-drop-shadow:drop-shadow(0 24px 32px rgba(0,0,0,0.95));filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-xl{--tw-backdrop-blur:blur(24px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-opacity{transition-property:opacity;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.duration-700{transition-duration:700ms}.ease-out{transition-timing-function:cubic-bezier(0, 0, 0.2, 1)}.selection\:bg-red-600 *::selection{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.selection\:text-white *::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.selection\:bg-red-600::selection{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.selection\:text-white::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.hover\:border-white\/25:hover{border-color:rgb(255 255 255 / 0.25)}.hover\:bg-red-500:hover{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.hover\:bg-white\/15:hover{background-color:rgb(255 255 255 / 0.15)}.hover\:bg-white\/\[0\.05\]:hover{background-color:rgb(255 255 255 / 0.05)}.hover\:bg-zinc-200:hover{--tw-bg-opacity:1;background-color:rgb(228 228 231 / var(--tw-bg-opacity, 1))}.hover\:text-red-300:hover{--tw-text-opacity:1;color:rgb(252 165 165 / var(--tw-text-opacity, 1))}.hover\:text-red-400:hover{--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.focus\:border-red-500:focus{--tw-border-opacity:1;border-color:rgb(239 68 68 / var(--tw-border-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.active\:cursor-grabbing:active{cursor:grabbing}.group:hover .group-hover\:translate-x-1{--tw-translate-x:0.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:bg-white\/20{background-color:rgb(255 255 255 / 0.2)}@media (min-width: 640px){.sm\:flex{display:flex}.sm\:h-10{height:2.5rem}.sm\:h-20{height:5rem}.sm\:w-10{width:2.5rem}.sm\:max-w-\[420px\]{max-width:420px}.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:py-12{padding-top:3rem;padding-bottom:3rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\:text-5xl{font-size:3rem;line-height:1}.sm\:text-7xl{font-size:4.5rem;line-height:1}.sm\:text-\[11px\]{font-size:11px}.sm\:text-base{font-size:1rem;line-height:1.5rem}.sm\:text-lg{font-size:1.125rem;line-height:1.75rem}.sm\:text-sm{font-size:0.875rem;line-height:1.25rem}}@media (min-width: 1024px){.lg\:col-span-5{grid-column:span 5 / span 5}.lg\:col-span-7{grid-column:span 7 / span 7}.lg\:grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:gap-14{gap:3.5rem}.lg\:px-10{padding-left:2.5rem;padding-right:2.5rem}.lg\:text-\[5\.2rem\]{font-size:5.2rem}}</style></head>
+<body class="min-h-screen flex flex-col justify-between showroom-grid selection:bg-red-600 selection:text-white">
+
+    <!-- Dinamik Ortam Işığı (Seçili Kulübün Rengine Göre Değişir) -->
+    <div id="ambient-glow" class="pointer-events-none fixed top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] rounded-full opacity-25 blur-[140px] transition-all duration-700" style="background: radial-gradient(circle, rgb(183, 143, 1) 0%, transparent 70%);"></div>
+
+    <!-- Üst Minimal Showroom Başlığı -->
+    <header class="relative z-30 border-b border-white/[0.06] bg-[#060608]/80 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 h-16 sm:h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-950 border border-white/15 flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-vest text-white text-base sm:text-lg"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-display text-xl sm:text-2xl tracking-wider text-white leading-none">MONTRY SHOWROOMS</span>
+                        <span class="text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded-full bg-white/10 text-zinc-300 border border-white/10">V1 SHOWROOM</span>
+                    </div>
+                    <p class="text-[10px] sm:text-[11px] text-zinc-500 tracking-wide">Motorcycle Club Vest</p>
+                </div>
+            </div>
+
+            <!-- Sağ Durum Göstergesi (Normal ziyaretçilere admin butonu görünmez) -->
+            <div class="hidden sm:flex items-center gap-2.5 text-xs text-zinc-400">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>991°</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ANA TEK EKRAN SHOWROOM SAHNESİ -->
+    <main class="relative z-20 flex-grow flex items-center py-8 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+
+                <!-- SOL SAHNE (5 KOLON): 3D DÖNEN YELEK / GIF VİTRİNİ -->
+                <div id="left-stage-wrapper" class="lg:col-span-5 flex justify-center stage-transition">
+                    <div class="w-full max-w-[380px] sm:max-w-[420px] glass-panel rounded-[2rem] p-5 relative overflow-hidden aspect-[4/4.6] flex flex-col justify-between shadow-2xl shadow-black/90">
+                        
+                        <!-- Üst Rozet -->
+                        <div class="relative z-20 flex items-center justify-between">
+                            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/70 border border-white/10 text-[11px] font-semibold tracking-wider uppercase text-zinc-300">
+                                <span id="stage-dot" class="w-2 h-2 rounded-full animate-pulse bg-red-600" style="background-color: rgb(183, 143, 1);"></span>
+                                <span id="stage-mode-label"></span>
+                            </span>
+                            <span id="stage-counter" class="font-mono text-xs font-bold text-zinc-400">02 / 03</span>
+                        </div>
+
+                        <!-- Orta Dönen 3D Yelek veya Özel GIF Alanı -->
+                        <div class="relative flex-grow w-full h-full flex items-center justify-center my-2 select-none">
+                            <!-- 3D Canvas -->
+                            <div id="vest-canvas-container" class="w-full h-full cursor-grab active:cursor-grabbing relative z-10 hidden"><canvas width="360" height="400" style="display: block; width: 360px; height: 400px;"></canvas></div>
+                            <!-- Özel GIF Görseli (GIF URL girilirse görünür) -->
+                            <img id="vest-gif-preview" src="https://i.imgur.com/W6T1B4d.gif" alt="3D Dönen Yelek GIF" class="max-h-[88%] max-w-[88%] object-contain drop-shadow-[0_24px_32px_rgba(0,0,0,0.95)] rounded-xl relative z-10">
+
+                            <!-- Alt Zemin Dönen Lazer Halka -->
+                            <div class="pointer-events-none absolute bottom-3 left-1/2 -translate-x-1/2 w-56 h-56 flex items-center justify-center">
+                                <div id="pedestal-ring" class="pedestal-ring w-52 h-52 rounded-full border-2 border-dashed border-red-600/40 shadow-[0_0_40px_rgba(220,38,38,0.25)]" style="border-color: rgba(183, 143, 1, 0.4); box-shadow: rgba(183, 143, 1, 0.208) 0px 0px 40px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Alt Kontroller -->
+                        <div class="relative z-20 flex items-center justify-between text-[11px] text-zinc-400 border-t border-white/[0.06] pt-3">
+                            <span id="stage-hint"><i class="fa-solid fa-film mr-1.5 text-zinc-300"></i>3D Dönen GIF Aktif</span>
+                            <button onclick="resetCameraAngle()" class="text-zinc-300 hover:text-white transition-colors font-medium">
+                                <i class="fa-solid fa-rotate-right mr-1"></i>Sıfırla
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SAĞ SAHNE (7 KOLON): KULÜP BAŞLIĞI, DETAYLAR VE BİRLİK TANITIM LİNKİ -->
+                <div id="right-stage-wrapper" class="lg:col-span-7 space-y-6 text-left stage-transition">
+                    <!-- Chapter & Kuruluş Rozeti -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <span id="club-badge" class="px-3.5 py-1 rounded-lg text-xs font-bold tracking-widest uppercase border border-red-600/40 bg-red-600/15 text-red-500" style="color: rgb(183, 143, 1); border-color: rgba(183, 143, 1, 0.4); background-color: rgba(183, 143, 1, 0.125);">SAN  ANDREAS</span>
+                        <span id="club-era" class="text-xs font-medium text-zinc-500 tracking-wider uppercase">// CUSTOM MC CUT</span>
+                    </div>
+
+                    <!-- Devasa Kulüp Başlığı -->
+                    <div>
+                        <h1 id="club-title" class="font-display text-5xl sm:text-7xl lg:text-[5.2rem] tracking-tight text-white leading-[0.92] uppercase">LOFTY EMPIRES</h1>
+                        <h2 id="club-subtitle" class="font-display text-3xl sm:text-5xl tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-zinc-200 via-zinc-400 to-zinc-600 leading-none uppercase mt-1.5">MOTORCYCLE CLUB</h2>
+                    </div>
+
+                    <!-- Yelek & Kulüp Açıklaması -->
+                    <p id="club-description" class="text-zinc-400 text-sm sm:text-base leading-relaxed max-w-2xl">"Kulüp Kimliği ve Tanımı" 
+Lofty Empires MC, 01.03.1999 yılında Arizona eyaletinde Ford Pounder tarafından kuruldu, Bir çok eyalette şubeleşmeye taşınmış bir kulüp haline geldi.</p>
+
+                    <!-- Doğrudan Birlik Tanıtım Sayfasına Giden Link Butonu -->
+                    <div class="pt-3 flex flex-wrap items-center gap-4">
+                        <a id="club-faction-link" href="https://www.rina-roleplay.com/gtav/index.php?topic=73013" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-4 px-7 py-4 rounded-2xl bg-white text-black font-bold text-xs sm:text-sm tracking-wider uppercase shadow-[0_0_30px_rgba(255,255,255,0.15)] hover:text-white transition-all duration-300" style="background-color: rgb(255, 255, 255); box-shadow: rgba(255, 255, 255, 0.15) 0px 0px 30px;">
+                            <span>TANITIM SAYFASINA GİT</span>
+                            <span class="w-8 h-8 rounded-xl bg-black/10 group-hover:bg-white/20 flex items-center justify-center transition-transform group-hover:translate-x-1">
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ALT KOLEKSİYON VİTRİNİ (KULÜPLER ARASI GEÇİŞ BAR) -->
+    <section class="relative z-30 border-t border-white/[0.06] bg-[#08080b]/90 backdrop-blur-xl py-5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">SHOWROOM KOLEKSİYONU</span>
+                <div class="flex items-center gap-2">
+                    <button onclick="prevClub()" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-all">
+                        <i class="fa-solid fa-chevron-left text-xs"></i>
+                    </button>
+                    <button onclick="nextClub()" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-zinc-300 hover:text-white transition-all">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Kulüp Kartları Grid -->
+            <div id="club-selector-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"><button type="button" class="text-left p-3.5 rounded-2xl border transition-all flex items-center justify-between bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.05]">
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono text-xs font-bold px-2 py-1 rounded-md bg-black/60 text-zinc-300 border border-white/10">
+                            01
+                        </span>
+                        <div>
+                            <div class="font-display text-lg tracking-wide text-white leading-none">TUGRUL</div>
+                            <div class="text-[11px] text-zinc-400 mt-0.5">RİZE 53</div>
+                        </div>
+                    </div>
+                    <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3f3f46;"></span>
+                </button><button type="button" class="text-left p-3.5 rounded-2xl border transition-all flex items-center justify-between bg-white/[0.08] border-white/25 shadow-lg">
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono text-xs font-bold px-2 py-1 rounded-md bg-black/60 text-zinc-300 border border-white/10">
+                            02
+                        </span>
+                        <div>
+                            <div class="font-display text-lg tracking-wide text-white leading-none">LOFTY EMPIRES</div>
+                            <div class="text-[11px] text-zinc-400 mt-0.5">SAN  ANDREAS</div>
+                        </div>
+                    </div>
+                    <span class="w-2.5 h-2.5 rounded-full" style="background-color: #b78f01;"></span>
+                </button><button type="button" class="text-left p-3.5 rounded-2xl border transition-all flex items-center justify-between bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.05]">
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono text-xs font-bold px-2 py-1 rounded-md bg-black/60 text-zinc-300 border border-white/10">
+                            03
+                        </span>
+                        <div>
+                            <div class="font-display text-lg tracking-wide text-white leading-none">ANGEL'S OF DEATH</div>
+                            <div class="text-[11px] text-zinc-400 mt-0.5">SAN ANDREAS</div>
+                        </div>
+                    </div>
+                    <span class="w-2.5 h-2.5 rounded-full" style="background-color: #3f3f46;"></span>
+                </button></div>
+        </div>
+    </section>
+
+    <!-- GİZLİ YÖNETİM ÇEKMECESİ (?admin=1 veya Ctrl + Shift + E ile açılır) -->
+    <div id="drawer-backdrop" onclick="closeDrawer()" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm transition-opacity hidden"></div>
+    <aside id="admin-drawer" class="fixed top-0 right-0 bottom-0 z-50 w-full max-w-lg bg-[#0d0d11] border-l border-white/10 shadow-2xl transform transition-transform duration-300 ease-out flex flex-col translate-x-full">
+        <div class="p-6 border-b border-white/10 flex items-center justify-between">
+            <div>
+                <h2 class="font-display text-2xl tracking-wide text-white">V1 SHOWROOM YÖNETİMİ</h2>
+                <p class="text-xs text-zinc-400 mt-0.5">Yeni kulüp ekle, 3D GIF linkini yapıştır veya güncel kodu kopyala.</p>
+            </div>
+            <button onclick="closeDrawer()" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/15 flex items-center justify-center text-zinc-400 hover:text-white transition-all">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="p-6 flex-grow overflow-y-auto space-y-6">
+            <div>
+                <div class="flex items-center justify-between mb-2.5">
+                    <label class="text-xs font-semibold uppercase tracking-wider text-zinc-400">Kayıtlı Kulüpler</label>
+                    <button onclick="prepareNewClubForm()" class="text-xs font-semibold text-red-400 hover:text-red-300 flex items-center gap-1">
+                        <i class="fa-solid fa-plus"></i> Yeni Kulüp Ekle
+                    </button>
+                </div>
+                <div id="drawer-club-list" class="space-y-2"><div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/25 cursor-pointer transition-all">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-3 h-3 rounded-full" style="background-color: #ffffff;"></span>
+                        <div>
+                            <div class="text-xs font-bold text-white">TUGRUL</div>
+                            <div class="text-[10px] text-zinc-400">RİZE 53</div>
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-zinc-400 px-2 py-0.5 rounded bg-white/5">Düzenle</span>
+                </div><div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/25 cursor-pointer transition-all">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-3 h-3 rounded-full" style="background-color: #b78f01;"></span>
+                        <div>
+                            <div class="text-xs font-bold text-white">LOFTY EMPIRES</div>
+                            <div class="text-[10px] text-zinc-400">SAN  ANDREAS</div>
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-zinc-400 px-2 py-0.5 rounded bg-white/5">Düzenle</span>
+                </div><div class="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/25 cursor-pointer transition-all">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-3 h-3 rounded-full" style="background-color: #001eff;"></span>
+                        <div>
+                            <div class="text-xs font-bold text-white">ANGEL'S OF DEATH</div>
+                            <div class="text-[10px] text-zinc-400">SAN ANDREAS</div>
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-zinc-400 px-2 py-0.5 rounded bg-white/5">Düzenle</span>
+                </div></div>
+            </div>
+
+            <form id="drawer-form" onsubmit="handleSaveClub(event)" class="space-y-4 pt-4 border-t border-white/10">
+                <input type="hidden" id="edit-index" value="1">
+                <div class="flex items-center justify-between">
+                    <h3 id="form-mode-title" class="text-xs font-bold uppercase tracking-widest text-white">Düzenleniyor: LOFTY EMPIRES</h3>
+                    <button type="button" id="btn-delete-club" onclick="deleteCurrentEditingClub()" class="text-xs text-zinc-500 hover:text-red-400 transition-colors" style="display: inline-block;">
+                        <i class="fa-regular fa-trash-can mr-1"></i>Sil
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1">Kulüp Ana Adı</label>
+                        <input type="text" id="f-title" required="" class="w-full px-3 py-2 rounded-xl bg-black/70 border border-white/10 text-sm text-white focus:outline-none focus:border-red-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1">Alt Başlık</label>
+                        <input type="text" id="f-subtitle" required="" class="w-full px-3 py-2 rounded-xl bg-black/70 border border-white/10 text-sm text-white focus:outline-none focus:border-red-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1">Chapter Rozeti</label>
+                        <input type="text" id="f-badge" class="w-full px-3 py-2 rounded-xl bg-black/70 border border-white/10 text-sm text-white focus:outline-none focus:border-red-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] text-zinc-400 mb-1">Vurgu Rengi (Hex)</label>
+                        <div class="flex items-center gap-2">
+                            <input type="color" id="f-color" class="h-9 w-12 rounded-lg bg-transparent border border-white/10 cursor-pointer">
+                            <input type="text" id="f-color-hex" class="w-full px-3 py-1.5 rounded-xl bg-black/70 border border-white/10 text-xs text-white font-mono">
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[11px] text-zinc-400 mb-1">3D Dönen Yelek GIF URL'si <span class="text-zinc-500">(Boşsa 3D model döner)</span></label>
+                    <input type="url" id="f-gif" class="w-full px-3 py-2 rounded-xl bg-black/70 border border-white/10 text-sm text-white focus:outline-none focus:border-red-500" placeholder="https://i.imgur.com/yelek-3d.gif">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] text-zinc-400 mb-1">Birlik Tanıtım Sayfası Linki</label>
+                    <input type="url" id="f-link" required="" class="w-full px-3 py-2 rounded-xl bg-black/70 border border-white/10 text-sm text-white focus:outline-none focus:border-red-500">
+                </div>
+
+                <div>
+                    <label class="block text-[11px] text-zinc-400 mb-1">Kulüp &amp; Yelek Açıklaması</label>
+                    <textarea id="f-desc" rows="2" class="w-full px-3 py-2 rounded-xl bg-black/70 border border-white/10 text-xs text-white focus:outline-none focus:border-red-500"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-bold uppercase tracking-wider shadow-lg shadow-red-600/25 transition-all">
+                    Değişiklikleri Kaydet &amp; Uygula
+                </button>
+            </form>
+
+            <div class="pt-4 border-t border-white/10">
+                <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/10 space-y-2.5">
+                    <div class="flex items-center gap-2 text-xs font-semibold text-white">
+                        <i class="fa-brands fa-github text-base"></i>
+                        <span>GitHub Pages İçin Dışa Aktar</span>
+                    </div>
+                    <p class="text-[11px] text-zinc-400 leading-relaxed">
+                        Yaptığın tüm değişikliklerin gömülü olduğu tam HTML kodunu panoya kopyalar (normal ziyaretçilerde admin paneli gizli kalır).
+                    </p>
+                    <button type="button" onclick="exportStandaloneHTML()" class="w-full py-2.5 rounded-xl bg-white text-black hover:bg-zinc-200 text-xs font-bold transition-all flex items-center justify-center gap-2">
+                        <i class="fa-regular fa-copy"></i>
+                        <span>Güncel Tam HTML Kodunu Kopyala</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Bildirim Toast -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none transition-all duration-300">
+        <div class="px-4 py-2.5 rounded-full bg-zinc-900 border border-white/15 text-white text-xs font-medium shadow-2xl flex items-center gap-2">
+            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+            <span id="toast-msg">Gizli yönetici paneli açıldı.</span>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // 1. KULÜP & YELEK VERİLERİ
+        // =========================================================================
+        let clubsData = [
+          {
+                    "id": "tugrul",
+                    "badge": "RİZE 53",
+                    "era": "991",
+                    "title": "TUGRUL",
+                    "subtitle": "AKA MONTRY",
+                    "description": "2021-2024 Yılları arasında SA-MP platformunda bir çok birlikte oynamış ve yönetmiş, 2024-2026 RAGE-MP ve FiveM üzerinde hala rol yapmakta. Bu sitede göreceğiniz yelek veya 3d Texture sahibi Tugrul aka Montry kişisine aittir.",
+                    "factionUrl": "https://www.rina-roleplay.com/gtav/index.php?topic=77486",
+                    "gifUrl": "https://i.imgur.com/QZaC37W.jpeg",
+                    "accentColor": "#ffffff",
+                    "patchPrimary": "#ffffff",
+                    "patchSecondary": "#ffffff",
+                    "topRocker": "TUGRUL",
+                    "bottomRocker": "RİZE 53",
+                    "frontLeftTop": "PRESIDENT",
+                    "frontLeftBottom": "1%ER",
+                    "frontRightTop": "M.C."
+          },
+          {
+                    "id": "lofty-empires",
+                    "badge": "SAN  ANDREAS",
+                    "era": "CUSTOM MC CUT",
+                    "title": "LOFTY EMPIRES",
+                    "subtitle": "MOTORCYCLE CLUB",
+                    "description": "\"Kulüp Kimliği ve Tanımı\" \nLofty Empires MC, 01.03.1999 yılında Arizona eyaletinde Ford Pounder tarafından kuruldu, Bir çok eyalette şubeleşmeye taşınmış bir kulüp haline geldi.",
+                    "factionUrl": "https://www.rina-roleplay.com/gtav/index.php?topic=73013",
+                    "gifUrl": "https://i.imgur.com/W6T1B4d.gif",
+                    "accentColor": "#b78f01",
+                    "patchPrimary": "#b78f01",
+                    "patchSecondary": "#ffffff",
+                    "topRocker": "LOFTY EMPIRES",
+                    "bottomRocker": "SAN  ANDREAS",
+                    "frontLeftTop": "PRESIDENT",
+                    "frontLeftBottom": "1%ER",
+                    "frontRightTop": "M.C."
+          },
+          {
+                    "id": "angel-s-of-death",
+                    "badge": "SAN ANDREAS",
+                    "era": "CUSTOM MC CUT",
+                    "title": "ANGEL'S OF DEATH",
+                    "subtitle": "MOTORCYCLE CLUB",
+                    "description": "Kardeşlik, sadakat ve Amerikan demiri üzerine kurulan bizler özgür yaşar, özgür süreriz. Kendi kardeşlerimiz dışında kimseye hesap vermeyiz. Japon teneke motorlara binmeyiz, palyaço gibi neon ceketler giymeyiz. Ve sizin sikik kurallarınıza boyun eğecek adamlar da değiliz..\n\nEtrafına iyi bak, sınırını bil ve desteğini göstermek istiyorsan birkaç parça ürün kap. Ama buraya gelip Meksika artığı şişko maymunlar gibi boş yapacaksan siktir olup git. #AODMC",
+                    "factionUrl": "https://www.rina-roleplay.com/gtav/index.php?topic=66577",
+                    "gifUrl": "https://i.imgur.com/5hXbTaZ.gif",
+                    "accentColor": "#001eff",
+                    "patchPrimary": "#001eff",
+                    "patchSecondary": "#ffffff",
+                    "topRocker": "ANGEL'S OF DEATH",
+                    "bottomRocker": "SAN ANDREAS",
+                    "frontLeftTop": "PRESIDENT",
+                    "frontLeftBottom": "1%ER",
+                    "frontRightTop": "M.C."
+          }
+];
+
+        let currentClubIndex = 0;
+        let isTransitioning = false;
+        let isAdminMode = new URLSearchParams(window.location.search).get('admin') === '1';
+
+        window.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'e') {
+                e.preventDefault();
+                const drawer = document.getElementById('admin-drawer');
+                if (drawer.classList.contains('translate-x-full')) {
+                    isAdminMode = true;
+                    openDrawer();
+                    showToast('Gizli yönetici paneli açıldı.');
+                } else {
+                    closeDrawer();
+                }
+            }
+        });
+
+        // =========================================================================
+        // 2. THREE.JS 3D YELEK MOTORU (360° TURNTABLE)
+        // =========================================================================
+        let scene, camera, renderer, vestGroup, rimLight;
+        let isDragging = false;
+        let prevMouseX = 0;
+
+        function createLeatherTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#131316';
+            ctx.fillRect(0, 0, 256, 256);
+
+            for (let i = 0; i < 6500; i++) {
+                const x = Math.random() * 256;
+                const y = Math.random() * 256;
+                const alpha = Math.random() * 0.08;
+                ctx.fillStyle = Math.random() > 0.5 ? `rgba(255,255,255,${alpha})` : `rgba(0,0,0,${alpha * 2})`;
+                ctx.fillRect(x, y, 2, 2);
+            }
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.wrapS = THREE.RepeatWrapping;
+            tex.wrapT = THREE.RepeatWrapping;
+            tex.repeat.set(3, 3);
+            return tex;
+        }
+
+        function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+            if (fill) ctx.fill();
+            if (stroke) ctx.stroke();
+        }
+
+        function drawCurvedRocker(ctx, text, cx, cy, radius, isTop, primaryColor, textColor) {
+            ctx.save();
+            const startAngle = isTop ? Math.PI * 1.16 : Math.PI * 0.84;
+            const endAngle = isTop ? Math.PI * 1.84 : Math.PI * 0.16;
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, startAngle, endAngle, !isTop);
+            ctx.lineWidth = 76;
+            ctx.strokeStyle = primaryColor;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, startAngle + (isTop ? 0.02 : -0.02), endAngle - (isTop ? 0.02 : -0.02), !isTop);
+            ctx.lineWidth = 60;
+            ctx.strokeStyle = '#09090b';
+            ctx.stroke();
+
+            ctx.fillStyle = textColor;
+            ctx.font = '900 44px "Bebas Neue", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            const chars = text.split('');
+            const totalAngle = isTop ? 1.72 : -1.72;
+            const step = totalAngle / Math.max(chars.length, 1);
+            const baseAngle = isTop ? -Math.PI / 2 - (totalAngle / 2) + step / 2 : Math.PI / 2 - (totalAngle / 2) + step / 2;
+
+            chars.forEach((char, i) => {
+                const angle = baseAngle + i * step;
+                ctx.save();
+                ctx.translate(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+                ctx.rotate(isTop ? angle + Math.PI / 2 : angle - Math.PI / 2);
+                ctx.fillText(char, 0, 2);
+                ctx.restore();
+            });
+            ctx.restore();
+        }
+
+        function createBackPatchTexture(club) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 1280;
+            const ctx = canvas.getContext('2d');
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+            ctx.lineWidth = 4;
+            ctx.setLineDash([12, 10]);
+            ctx.strokeRect(110, 90, 804, 1100);
+            ctx.setLineDash([]);
+
+            const cx = 512;
+            drawCurvedRocker(ctx, club.topRocker, cx, 440, 290, true, club.patchPrimary, club.patchSecondary);
+            drawCurvedRocker(ctx, club.bottomRocker, cx, 820, 290, false, club.patchPrimary, club.patchSecondary);
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(cx, 635, 150, 0, Math.PI * 2);
+            ctx.fillStyle = '#09090b';
+            ctx.fill();
+            ctx.lineWidth = 10;
+            ctx.strokeStyle = club.patchPrimary;
+            ctx.stroke();
+
+            ctx.fillStyle = club.patchSecondary;
+            for (let side of [-1, 1]) {
+                ctx.save();
+                ctx.translate(cx + side * 62, 625);
+                ctx.scale(side, 1);
+                for (let f = 0; f < 4; f++) {
+                    ctx.beginPath();
+                    ctx.ellipse(34 + f * 11, -24 + f * 21, 52 - f * 5, 10, -0.25 + f * 0.15, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+
+            ctx.beginPath();
+            ctx.arc(cx, 617, 50, Math.PI * 0.85, Math.PI * 2.15);
+            ctx.lineTo(cx + 30, 680);
+            ctx.lineTo(cx - 30, 680);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.fillStyle = club.patchPrimary;
+            ctx.beginPath();
+            ctx.arc(cx - 19, 623, 12, 0, Math.PI * 2);
+            ctx.arc(cx + 19, 623, 12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            ctx.save();
+            ctx.fillStyle = '#09090b';
+            ctx.strokeStyle = club.patchPrimary;
+            ctx.lineWidth = 8;
+            roundRect(ctx, 745, 595, 115, 85, 12, true, true);
+            ctx.fillStyle = club.patchSecondary;
+            ctx.font = '900 44px "Bebas Neue", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('MC', 802, 640);
+            ctx.restore();
+
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.anisotropy = 4;
+            return tex;
+        }
+
+        function createFrontPatchTexture(club) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 1280;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#09090b';
+            ctx.fillRect(496, 170, 32, 1020);
+            ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(496, 170, 32, 1020);
+
+            for (let y = 230; y <= 1120; y += 175) {
+                ctx.beginPath();
+                ctx.arc(512, y, 11, 0, Math.PI * 2);
+                ctx.fillStyle = '#cbd5e1';
+                ctx.fill();
+            }
+
+            const drawFlash = (text, x, y, border, color) => {
+                ctx.save();
+                ctx.fillStyle = '#09090b';
+                ctx.strokeStyle = border;
+                ctx.lineWidth = 6;
+                roundRect(ctx, x, y, 210, 56, 8, true, true);
+                ctx.fillStyle = color;
+                ctx.font = 'bold 30px "Bebas Neue", sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(text, x + 105, y + 30);
+                ctx.restore();
+            };
+
+            drawFlash(club.frontLeftTop || 'PRESIDENT', 250, 360, club.patchPrimary, club.patchSecondary);
+            drawFlash(club.frontLeftBottom || '1%ER', 250, 435, '#18181b', club.patchPrimary);
+            drawFlash(club.frontRightTop || 'M.C.', 565, 360, '#18181b', club.patchSecondary);
+
+            ctx.save();
+            ctx.translate(670, 485);
+            ctx.rotate(Math.PI / 4);
+            ctx.fillStyle = '#09090b';
+            ctx.strokeStyle = club.patchPrimary;
+            ctx.lineWidth = 6;
+            ctx.fillRect(-34, -34, 68, 68);
+            ctx.strokeRect(-34, -34, 68, 68);
+            ctx.rotate(-Math.PI / 4);
+            ctx.fillStyle = club.patchSecondary;
+            ctx.font = 'bold 28px "Bebas Neue", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('1%', 0, 2);
+            ctx.restore();
+
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.anisotropy = 4;
+            return tex;
+        }
+
+        function init3DScene() {
+            const container = document.getElementById('vest-canvas-container');
+            if (!container) return;
+
+            scene = new THREE.Scene();
+            const width = container.clientWidth || 360;
+            const height = container.clientHeight || 400;
+
+            camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 100);
+            camera.position.set(0, 0.1, 5.2);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.innerHTML = '';
+            container.appendChild(renderer.domElement);
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.75));
+            const keyLight = new THREE.DirectionalLight(0xffffff, 1.3);
+            keyLight.position.set(3, 4, 5);
+            scene.add(keyLight);
+
+            const backLight = new THREE.DirectionalLight(0xffffff, 1.2);
+            backLight.position.set(-3, 3, -5);
+            scene.add(backLight);
+
+            rimLight = new THREE.PointLight('#dc2626', 1.8, 10);
+            rimLight.position.set(0, -2, 2);
+            scene.add(rimLight);
+
+            const dom = renderer.domElement;
+            dom.addEventListener('mousedown', (e) => { isDragging = true; prevMouseX = e.clientX; });
+            window.addEventListener('mouseup', () => { isDragging = false; });
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging || !vestGroup) return;
+                vestGroup.rotation.y += (e.clientX - prevMouseX) * 0.013;
+                prevMouseX = e.clientX;
+            });
+
+            dom.addEventListener('touchstart', (e) => { isDragging = true; prevMouseX = e.touches[0].clientX; }, { passive: true });
+            window.addEventListener('touchend', () => { isDragging = false; });
+            window.addEventListener('touchmove', (e) => {
+                if (!isDragging || !vestGroup) return;
+                vestGroup.rotation.y += (e.touches[0].clientX - prevMouseX) * 0.015;
+                prevMouseX = e.touches[0].clientX;
+            }, { passive: true });
+
+            window.addEventListener('resize', () => {
+                if (!container || !renderer || !camera) return;
+                const w = container.clientWidth;
+                const h = container.clientHeight;
+                if (w > 0 && h > 0) {
+                    camera.aspect = w / h;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(w, h);
+                }
+            });
+        }
+
+        function buildVestModel(club) {
+            if (!scene) init3DScene();
+            if (vestGroup) {
+                scene.remove(vestGroup);
+            }
+            if (rimLight) {
+                rimLight.color.set(club.accentColor || '#dc2626');
+            }
+
+            vestGroup = new THREE.Group();
+            const leatherMat = new THREE.MeshStandardMaterial({
+                color: 0x18181b,
+                map: createLeatherTexture(),
+                roughness: 0.55,
+                metalness: 0.15
+            });
+
+            const vestShape = new THREE.Shape();
+            vestShape.moveTo(-0.88, -1.25);
+            vestShape.lineTo(0.88, -1.25);
+            vestShape.lineTo(0.95, 0.25);
+            vestShape.quadraticCurveTo(0.76, 0.65, 0.85, 1.05);
+            vestShape.lineTo(0.42, 1.24);
+            vestShape.quadraticCurveTo(0, 1.02, -0.42, 1.24);
+            vestShape.lineTo(-0.85, 1.05);
+            vestShape.quadraticCurveTo(-0.76, 0.65, -0.95, 0.25);
+            vestShape.closePath();
+
+            const bodyGeo = new THREE.ExtrudeGeometry(vestShape, {
+                steps: 2,
+                depth: 0.44,
+                bevelEnabled: true,
+                bevelThickness: 0.08,
+                bevelSize: 0.06,
+                bevelSegments: 4
+            });
+            bodyGeo.center();
+
+            const pos = bodyGeo.attributes.position;
+            for (let i = 0; i < pos.count; i++) {
+                const x = pos.getX(i);
+                const z = pos.getZ(i);
+                const bend = Math.cos(x * 0.95) * 0.14;
+                pos.setZ(i, z + (z >= 0 ? bend : -bend * 0.6));
+            }
+            bodyGeo.computeVertexNormals();
+            vestGroup.add(new THREE.Mesh(bodyGeo, leatherMat));
+
+            const collarGeo = new THREE.CylinderGeometry(0.43, 0.46, 0.16, 28, 1, true, Math.PI * 0.18, Math.PI * 1.64);
+            const collarMat = new THREE.MeshStandardMaterial({ color: 0x111114, roughness: 0.5, side: THREE.DoubleSide });
+            const collarMesh = new THREE.Mesh(collarGeo, collarMat);
+            collarMesh.position.set(0, 1.18, 0.02);
+            collarMesh.rotation.y = Math.PI;
+            vestGroup.add(collarMesh);
+
+            const backGeo = new THREE.PlaneGeometry(1.78, 2.35, 20, 20);
+            const bPos = backGeo.attributes.position;
+            for (let i = 0; i < bPos.count; i++) {
+                bPos.setZ(i, Math.cos(bPos.getX(i) * 0.95) * 0.14);
+            }
+            backGeo.computeVertexNormals();
+            const backMesh = new THREE.Mesh(backGeo, new THREE.MeshStandardMaterial({
+                map: createBackPatchTexture(club),
+                transparent: true,
+                roughness: 0.75,
+                depthWrite: false
+            }));
+            backMesh.position.set(0, 0.02, -0.315);
+            backMesh.rotation.y = Math.PI;
+            vestGroup.add(backMesh);
+
+            const frontGeo = new THREE.PlaneGeometry(1.78, 2.35, 20, 20);
+            const fPos = frontGeo.attributes.position;
+            for (let i = 0; i < fPos.count; i++) {
+                fPos.setZ(i, Math.cos(fPos.getX(i) * 0.95) * 0.14);
+            }
+            frontGeo.computeVertexNormals();
+            const frontMesh = new THREE.Mesh(frontGeo, new THREE.MeshStandardMaterial({
+                map: createFrontPatchTexture(club),
+                transparent: true,
+                roughness: 0.75,
+                depthWrite: false
+            }));
+            frontMesh.position.set(0, 0.02, 0.315);
+            vestGroup.add(frontMesh);
+
+            vestGroup.rotation.y = Math.PI - 0.35;
+            scene.add(vestGroup);
+        }
+
+        function resetCameraAngle() {
+            if (vestGroup) {
+                vestGroup.rotation.y = Math.PI - 0.35;
+            }
+        }
+
+        function animateLoop() {
+            requestAnimationFrame(animateLoop);
+            if (vestGroup && renderer && scene && camera) {
+                if (!isDragging) {
+                    vestGroup.rotation.y += 0.011;
+                }
+                vestGroup.position.y = Math.sin(Date.now() * 0.002) * 0.035;
+                renderer.render(scene, camera);
+            }
+        }
+
+        // =========================================================================
+        // 3. KULÜP SEÇİMİ & EKRAN GÜNCELLEME (SİNEMATİK GEÇİŞ ANİMASYONLU)
+        // =========================================================================
+        function applyClubContent(index) {
+            currentClubIndex = index;
+            const club = clubsData[index];
+            if (!club) return;
+
+            document.getElementById('stage-counter').textContent = `${String(index + 1).padStart(2, '0')} / ${String(clubsData.length).padStart(2, '0')}`;
+            document.getElementById('stage-dot').style.backgroundColor = club.accentColor;
+
+            const badge = document.getElementById('club-badge');
+            badge.textContent = club.badge;
+            badge.style.color = club.accentColor;
+            badge.style.borderColor = `${club.accentColor}66`;
+            badge.style.backgroundColor = `${club.accentColor}20`;
+
+            document.getElementById('club-era').textContent = `// ${club.era}`;
+            document.getElementById('club-title').textContent = club.title;
+            document.getElementById('club-subtitle').textContent = club.subtitle;
+            document.getElementById('club-description').textContent = club.description;
+
+            const factionLink = document.getElementById('club-faction-link');
+            factionLink.href = club.factionUrl;
+            factionLink.onmouseover = () => {
+                factionLink.style.backgroundColor = club.accentColor;
+                factionLink.style.boxShadow = `0 0 35px ${club.accentColor}66`;
+            };
+            factionLink.onmouseout = () => {
+                factionLink.style.backgroundColor = '#ffffff';
+                factionLink.style.boxShadow = '0 0 30px rgba(255,255,255,0.15)';
+            };
+
+            document.getElementById('ambient-glow').style.background = `radial-gradient(circle, ${club.accentColor} 0%, transparent 70%)`;
+            const ring = document.getElementById('pedestal-ring');
+            ring.style.borderColor = `${club.accentColor}66`;
+            ring.style.boxShadow = `0 0 40px ${club.accentColor}35`;
+
+            const canvasContainer = document.getElementById('vest-canvas-container');
+            const gifPreview = document.getElementById('vest-gif-preview');
+            const modeLabel = document.getElementById('stage-mode-label');
+            const hintLabel = document.getElementById('stage-hint');
+
+            if (club.gifUrl && club.gifUrl.trim() !== '') {
+                canvasContainer.classList.add('hidden');
+                gifPreview.classList.remove('hidden');
+                gifPreview.src = club.gifUrl;
+                modeLabel.textContent = '';
+                hintLabel.innerHTML = '<i class="fa-solid fa-film mr-1.5 text-zinc-300"></i>3D Dönen GIF Aktif';
+            } else {
+                gifPreview.classList.add('hidden');
+                canvasContainer.classList.remove('hidden');
+                modeLabel.textContent = '360° LIVE RENDER';
+                hintLabel.innerHTML = '<i class="fa-solid fa-arrows-left-right mr-1.5 text-zinc-300"></i>İncelemek için sürükle';
+                buildVestModel(club);
+            }
+
+            renderClubSelectorCards();
+        }
+
+        function selectClub(index, skipAnimation = false) {
+            if (!clubsData[index]) return;
+
+            if (skipAnimation || index === currentClubIndex) {
+                applyClubContent(index);
+                return;
+            }
+
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            const leftStage = document.getElementById('left-stage-wrapper');
+            const rightStage = document.getElementById('right-stage-wrapper');
+
+            // Alt koleksiyon kartındaki aktif işareti anında güncelle
+            currentClubIndex = index;
+            renderClubSelectorCards();
+
+            // 1. Aşama: Mevcut sahneyi yumuşakça sönümle (Fade + Blur + Scale)
+            leftStage.classList.add('is-switching-left');
+            rightStage.classList.add('is-switching-right');
+
+            // 2. Aşama: Yeni kulüp verisini ve 3D yeleği yükle, ardından sahneyi geri getir
+            setTimeout(() => {
+                applyClubContent(index);
+
+                requestAnimationFrame(() => {
+                    leftStage.classList.remove('is-switching-left');
+                    rightStage.classList.remove('is-switching-right');
+                });
+
+                setTimeout(() => {
+                    isTransitioning = false;
+                }, 340);
+            }, 280);
+        }
+
+        function prevClub() {
+            const nextIdx = (currentClubIndex - 1 + clubsData.length) % clubsData.length;
+            selectClub(nextIdx);
+        }
+
+        function nextClub() {
+            const nextIdx = (currentClubIndex + 1) % clubsData.length;
+            selectClub(nextIdx);
+        }
+
+        function renderClubSelectorCards() {
+            const grid = document.getElementById('club-selector-grid');
+            grid.innerHTML = '';
+
+            clubsData.forEach((club, idx) => {
+                const isActive = idx === currentClubIndex;
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.onclick = () => selectClub(idx);
+                card.className = `text-left p-3.5 rounded-2xl border transition-all flex items-center justify-between ${
+                    isActive 
+                        ? 'bg-white/[0.08] border-white/25 shadow-lg' 
+                        : 'bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.05]'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="font-mono text-xs font-bold px-2 py-1 rounded-md bg-black/60 text-zinc-300 border border-white/10">
+                            ${String(idx + 1).padStart(2, '0')}
+                        </span>
+                        <div>
+                            <div class="font-display text-lg tracking-wide text-white leading-none">${club.title}</div>
+                            <div class="text-[11px] text-zinc-400 mt-0.5">${club.badge}</div>
+                        </div>
+                    </div>
+                    <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${isActive ? club.accentColor : '#3f3f46'};"></span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // =========================================================================
+        // 4. GİZLİ YÖNETİM PANELİ & DIŞA AKTARMA
+        // =========================================================================
+        function openDrawer() {
+            renderDrawerList();
+            loadClubIntoForm(currentClubIndex);
+            document.getElementById('drawer-backdrop').classList.remove('hidden');
+            document.getElementById('admin-drawer').classList.remove('translate-x-full');
+        }
+
+        function closeDrawer() {
+            document.getElementById('drawer-backdrop').classList.add('hidden');
+            document.getElementById('admin-drawer').classList.add('translate-x-full');
+        }
+
+        function renderDrawerList() {
+            const list = document.getElementById('drawer-club-list');
+            list.innerHTML = '';
+            clubsData.forEach((club, idx) => {
+                const item = document.createElement('div');
+                item.className = 'flex items-center justify-between p-2.5 rounded-xl bg-white/[0.03] border border-white/10 hover:border-white/25 cursor-pointer transition-all';
+                item.onclick = () => loadClubIntoForm(idx);
+                item.innerHTML = `
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-3 h-3 rounded-full" style="background-color: ${club.accentColor};"></span>
+                        <div>
+                            <div class="text-xs font-bold text-white">${club.title}</div>
+                            <div class="text-[10px] text-zinc-400">${club.badge}</div>
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-zinc-400 px-2 py-0.5 rounded bg-white/5">Düzenle</span>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function loadClubIntoForm(idx) {
+            const club = clubsData[idx];
+            if (!club) return;
+            document.getElementById('edit-index').value = idx;
+            document.getElementById('form-mode-title').textContent = `Düzenleniyor: ${club.title}`;
+            document.getElementById('btn-delete-club').style.display = clubsData.length > 1 ? 'inline-block' : 'none';
+
+            document.getElementById('f-title').value = club.title;
+            document.getElementById('f-subtitle').value = club.subtitle;
+            document.getElementById('f-badge').value = club.badge;
+            document.getElementById('f-color').value = club.accentColor;
+            document.getElementById('f-color-hex').value = club.accentColor;
+            document.getElementById('f-gif').value = club.gifUrl || '';
+            document.getElementById('f-link').value = club.factionUrl;
+            document.getElementById('f-desc').value = club.description;
+        }
+
+        function prepareNewClubForm() {
+            document.getElementById('edit-index').value = '-1';
+            document.getElementById('form-mode-title').textContent = 'Yeni Kulüp Ekle';
+            document.getElementById('btn-delete-club').style.display = 'none';
+
+            document.getElementById('f-title').value = '';
+            document.getElementById('f-subtitle').value = 'MOTORCYCLE CLUB';
+            document.getElementById('f-badge').value = 'NEW CHAPTER';
+            document.getElementById('f-color').value = '#dc2626';
+            document.getElementById('f-color-hex').value = '#dc2626';
+            document.getElementById('f-gif').value = '';
+            document.getElementById('f-link').value = 'https://';
+            document.getElementById('f-desc').value = '';
+        }
+
+        document.getElementById('f-color').addEventListener('input', (e) => {
+            document.getElementById('f-color-hex').value = e.target.value;
+        });
+
+        function handleSaveClub(e) {
+            e.preventDefault();
+            const idx = parseInt(document.getElementById('edit-index').value, 10);
+            const titleVal = document.getElementById('f-title').value.trim().toUpperCase();
+            const colorVal = document.getElementById('f-color-hex').value.trim() || document.getElementById('f-color').value;
+
+            const newObj = {
+                id: titleVal.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+                badge: document.getElementById('f-badge').value.trim().toUpperCase() || 'CHAPTER',
+                era: 'CUSTOM MC CUT',
+                title: titleVal,
+                subtitle: document.getElementById('f-subtitle').value.trim().toUpperCase() || 'MOTORCYCLE CLUB',
+                description: document.getElementById('f-desc').value.trim(),
+                factionUrl: document.getElementById('f-link').value.trim(),
+                gifUrl: document.getElementById('f-gif').value.trim(),
+                accentColor: colorVal,
+                patchPrimary: colorVal,
+                patchSecondary: '#ffffff',
+                topRocker: titleVal,
+                bottomRocker: document.getElementById('f-badge').value.trim().toUpperCase() || 'SAN ANDREAS',
+                frontLeftTop: 'PRESIDENT',
+                frontLeftBottom: '1%ER',
+                frontRightTop: 'M.C.'
+            };
+
+            if (idx === -1) {
+                clubsData.push(newObj);
+                currentClubIndex = clubsData.length - 1;
+                showToast(`${titleVal} vitrine eklendi!`);
+            } else {
+                clubsData[idx] = { ...clubsData[idx], ...newObj };
+                currentClubIndex = idx;
+                showToast(`${titleVal} güncellendi!`);
+            }
+
+            selectClub(currentClubIndex, true);
+            renderDrawerList();
+        }
+
+        function deleteCurrentEditingClub() {
+            const idx = parseInt(document.getElementById('edit-index').value, 10);
+            if (idx >= 0 && clubsData.length > 1) {
+                const deletedName = clubsData[idx].title;
+                clubsData.splice(idx, 1);
+                currentClubIndex = 0;
+                selectClub(0, true);
+                renderDrawerList();
+                loadClubIntoForm(0);
+                showToast(`${deletedName} listeden kaldırıldı.`);
+            }
+        }
+
+        function exportStandaloneHTML() {
+            const wasOpen = !document.getElementById('admin-drawer').classList.contains('translate-x-full');
+            closeDrawer();
+
+            let docHTML = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+            const serializedData = JSON.stringify(clubsData, null, 12);
+            docHTML = docHTML.replace(/let clubsData = \[[\s\S]*?\];/, `let clubsData = ${serializedData};`);
+
+            if (wasOpen) {
+                openDrawer();
+            }
+
+            const textarea = document.createElement('textarea');
+            textarea.value = docHTML;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            showToast('Versiyon 1 HTML kodu panoya kopyalandı!');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+            }, 3000);
+        }
+
+        window.onload = function() {
+            init3DScene();
+            selectClub(0, true);
+            animateLoop();
+            if (isAdminMode) {
+                openDrawer();
+            }
+        };
+    </script>
+
+</body></html>
